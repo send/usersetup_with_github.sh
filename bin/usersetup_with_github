@@ -1,0 +1,32 @@
+#!/bin/bash
+
+usage () {
+cat <<_EOT_
+Usage:
+  $0 [-w] github_user_name
+Description:
+  Setup user with github.
+Options:
+  -w: adds wheel to the supplementary groups of new account.
+_EOT_
+exit 0
+}
+
+ROLES="users"
+while getopts hw OPT
+do
+  case $OPT in
+    "h" ) usage ;;
+    "w" ) ROLES="users,wheel" ;;
+  esac
+done
+
+shift `expr $OPTIND - 1`
+USER=$1
+
+sudo useradd -m -p \"\" -g users -G ${ROLES} $USER
+sudo chage -d 0 ${USER}
+sudo mkdir -p /home/${USER}/.ssh
+sudo curl "https://github.com/${USER}.keys" -o /home/${USER}/.ssh/authorized_keys
+sudo chown ${USER}:users /home/${USER}/.ssh/authorized_keys
+sudo chmod 0600 /home/${USER}/.ssh/authorized_keys

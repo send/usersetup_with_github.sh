@@ -24,7 +24,7 @@ done
 shift `expr $OPTIND - 1`
 USER=$1
 
-sudo useradd -m -p \"\" -g users -G ${ROLES} $USER
+sudo useradd -m -p "" -g users -G ${ROLES} $USER
 sudo chage -d 0 ${USER}
 sudo mkdir -p /home/${USER}/.ssh
 sudo curl "https://github.com/${USER}.keys" -o /home/${USER}/.ssh/authorized_keys
